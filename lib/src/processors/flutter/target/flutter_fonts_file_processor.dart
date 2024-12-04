@@ -25,6 +25,8 @@
 
 import 'package:flutter_flavorizr/src/parser/models/flavorizr.dart';
 import 'package:flutter_flavorizr/src/processors/commons/copy_file_processor.dart';
+import 'package:flutter_flavorizr/src/processors/commons/delete_file_processor.dart';
+import 'package:flutter_flavorizr/src/processors/commons/existing_file_processor.dart';
 import 'package:flutter_flavorizr/src/processors/commons/queue_processor.dart';
 
 class FlutterFontsFileProcessor extends QueueProcessor {
@@ -33,6 +35,24 @@ class FlutterFontsFileProcessor extends QueueProcessor {
     required Flavorizr config,
   }) : super(
           [
+            ...['ttf, otf, eot', 'woff', 'woff2']
+                .map((ext) => ExistingFileProcessor(
+                      '$destination/primary-regular.$ext',
+                      DeleteFileProcessor(
+                        '$destination/primary-regular.$ext',
+                        config: config,
+                      ),
+                      config: config,
+                    )),
+            ...['ttf, otf, eot', 'woff', 'woff2']
+                .map((ext) => ExistingFileProcessor(
+                      '$destination/primary-bold.$ext',
+                      DeleteFileProcessor(
+                        '$destination/primary-bold.$ext',
+                        config: config,
+                      ),
+                      config: config,
+                    )),
             if (config.app?.font?.regular?.isNotEmpty == true)
               CopyFileProcessor(
                 config.app!.font!.regular!,
