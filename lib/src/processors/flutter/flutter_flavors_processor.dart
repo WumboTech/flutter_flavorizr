@@ -61,18 +61,47 @@ class FlutterFlavorsProcessor extends StringProcessor {
     buffer.writeln('  static String get name => appFlavor?.name ?? \'\';');
     buffer.writeln();
 
+    final flavorKeys = config.flavors.keys;
+
+    /// Append app's title
     buffer.writeln('  static String get title {');
     buffer.writeln('    switch (appFlavor) {');
-
     config.flavors.forEach((String name, Flavor flavor) {
-      buffer.writeln('      case Flavor.${name.toLowerCase()}:');
+      if (flavorKeys.last != name) {
+        buffer.writeln('      case Flavor.${name.toLowerCase()}:');
+      } else {
+        buffer.writeln('      default:');
+      }
       buffer.writeln('        return \'${flavor.app.name}\';');
     });
-
-    buffer.writeln('      default:');
-    buffer.writeln('        return \'title\';');
     buffer.writeln('    }');
     buffer.writeln('  }');
+
+    /// Append custom configs
+    config.flavors.values.first.configs?.forEach((String cKey, String value) {
+      var isValid = true;
+      for (var fKey in flavorKeys) {
+        isValid =
+            isValid && config.flavors[fKey]?.configs?[cKey]?.isNotEmpty == true;
+      }
+
+      if (isValid) {
+        buffer.writeln();
+        buffer.writeln('  static String get $cKey {');
+        buffer.writeln('    switch (appFlavor) {');
+        for (var fKey in flavorKeys) {
+          if (flavorKeys.last != fKey) {
+            buffer.writeln('      case Flavor.${fKey.toLowerCase()}:');
+          } else {
+            buffer.writeln('      default:');
+          }
+          buffer.writeln(
+              '        return \'${config.flavors[fKey]?.configs?[cKey]}\';');
+        }
+        buffer.writeln('    }');
+        buffer.writeln('  }');
+      }
+    });
 
     buffer.writeln();
     buffer.writeln('}');
