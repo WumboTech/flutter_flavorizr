@@ -26,11 +26,16 @@
 import 'package:flutter_flavorizr/src/processors/commons/abstract_file_processor.dart';
 
 class ExistingFileProcessor extends AbstractFileProcessor {
+  final AbstractFileProcessor processor;
+
   ExistingFileProcessor(
     super.path,
-    AbstractFileProcessor processor, {
+    this.processor, {
     required super.config,
-  }) {
+  });
+
+  @override
+  void execute() {
     if (!file.existsSync()) {
       return;
     }
@@ -39,5 +44,5 @@ class ExistingFileProcessor extends AbstractFileProcessor {
   }
 
   @override
-  void execute() {}
+  String toString() => 'Check path: $path | existing: ${file.existsSync()}';
 }
