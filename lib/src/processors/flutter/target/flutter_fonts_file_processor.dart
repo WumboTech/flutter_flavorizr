@@ -27,44 +27,52 @@ import 'package:flutter_flavorizr/src/parser/models/flavorizr.dart';
 import 'package:flutter_flavorizr/src/processors/commons/copy_file_processor.dart';
 import 'package:flutter_flavorizr/src/processors/commons/delete_file_processor.dart';
 import 'package:flutter_flavorizr/src/processors/commons/existing_file_processor.dart';
+import 'package:flutter_flavorizr/src/processors/commons/existing_file_string_processor.dart';
 import 'package:flutter_flavorizr/src/processors/commons/queue_processor.dart';
+import 'package:flutter_flavorizr/src/processors/flutter/target/flutter_font_pubspec_processor.dart';
+import 'package:flutter_flavorizr/src/utils/constants.dart';
 
 class FlutterFontsFileProcessor extends QueueProcessor {
-  static final _fontExtensions = ['ttf', 'otf', 'eot', 'woff', 'woff2'];
-
   FlutterFontsFileProcessor(
     String destination, {
     required Flavorizr config,
   }) : super(
           [
-            ..._fontExtensions.map((ext) => ExistingFileProcessor(
-                  '$destination/primary-regular.$ext',
-                  DeleteFileProcessor(
-                    '$destination/primary-regular.$ext',
-                    config: config,
-                  ),
-                  config: config,
-                )),
-            ..._fontExtensions.map((ext) => ExistingFileProcessor(
-                      '$destination/primary-bold.$ext',
-                      DeleteFileProcessor(
-                        '$destination/primary-bold.$ext',
-                        config: config,
-                      ),
+            if (config.app?.font?.regular?.isNotEmpty == true)
+              ...K.fontExtensions.map((ext) => ExistingFileProcessor(
+                    '$destination/${K.fontRegular}.$ext',
+                    DeleteFileProcessor(
+                      '$destination/${K.fontRegular}.$ext',
                       config: config,
-                    )),
+                    ),
+                    config: config,
+                  )),
+            if (config.app?.font?.bold?.isNotEmpty == true)
+              ...K.fontExtensions.map((ext) => ExistingFileProcessor(
+                    '$destination/${K.fontBold}.$ext',
+                    DeleteFileProcessor(
+                      '$destination/${K.fontBold}.$ext',
+                      config: config,
+                    ),
+                    config: config,
+                  )),
             if (config.app?.font?.regular?.isNotEmpty == true)
               CopyFileProcessor(
                 config.app!.font!.regular!,
-                '$destination/primary-regular.${config.app!.font!.regularExt}',
+                '$destination/${K.fontRegular}.${config.app!.font!.regularExt}',
                 config: config,
               ),
             if (config.app?.font?.bold?.isNotEmpty == true)
               CopyFileProcessor(
                 config.app!.font!.bold!,
-                '$destination/primary-bold.${config.app!.font!.boldExt}',
+                '$destination/${K.fontBold}.${config.app!.font!.boldExt}',
                 config: config,
-              )
+              ),
+            ExistingFileStringProcessor(
+              'pubspec.yaml',
+              FlutterFontPubspecProcessor(config: config),
+              config: config,
+            ),
           ],
           config: config,
         );

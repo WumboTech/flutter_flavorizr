@@ -59,6 +59,12 @@ class K {
 
   static String flutterFontPath = 'assets/fonts';
 
+  static String fontRegular = 'primary-regular';
+
+  static List<String> fontExtensions = ['ttf', 'otf', 'eot', 'woff', 'woff2'];
+
+  static String fontBold = 'primary-bold';
+
   static String iOSPath = 'ios';
 
   static String iOSFlutterPath = '$iOSPath/Flutter';
