@@ -33,7 +33,7 @@ part 'android.g.dart';
 class Android {
   static const kFlavorDimensionValue = 'flavor-type';
 
-  @JsonKey(defaultValue: 'flavor-type')
+  @JsonKey(defaultValue: kFlavorDimensionValue)
   final String flavorDimensions;
 
   @JsonKey(disallowNullValue: true, defaultValue: {})

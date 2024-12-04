@@ -57,6 +57,8 @@ class K {
 
   static String flutterMainPagePath = '$flutterPagesPath/my_home_page.dart';
 
+  static String flutterFontPath = '$flutterPath/assets/fonts';
+
   static String iOSPath = 'ios';
 
   static String iOSFlutterPath = '$iOSPath/Flutter';

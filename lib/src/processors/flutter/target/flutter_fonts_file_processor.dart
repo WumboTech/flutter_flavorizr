@@ -23,34 +23,32 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_flavorizr/src/parser/models/flavorizr.dart';
+import 'package:flutter_flavorizr/src/processors/commons/copy_file_processor.dart';
+import 'package:flutter_flavorizr/src/processors/commons/queue_processor.dart';
 
-import 'android.dart';
-import 'font.dart';
-import 'ios.dart';
-import 'macos.dart';
+class FlutterFontsFileProcessor extends QueueProcessor {
+  FlutterFontsFileProcessor(
+    String destination, {
+    required Flavorizr config,
+  }) : super(
+          [
+            if (config.app?.font?.regular?.isNotEmpty == true)
+              CopyFileProcessor(
+                config.app!.font!.regular!,
+                '$destination/primary-regular.${config.app!.font!.regularExt}',
+                config: config,
+              ),
+            if (config.app?.font?.bold?.isNotEmpty == true)
+              CopyFileProcessor(
+                config.app!.font!.bold!,
+                '$destination/primary-bold.${config.app!.font!.boldExt}',
+                config: config,
+              )
+          ],
+          config: config,
+        );
 
-part 'app.g.dart';
-
-@JsonSerializable(anyMap: true, createToJson: false)
-class App {
-  @JsonKey(required: false, disallowNullValue: true)
-  final Android? android;
-
-  @JsonKey(required: false, disallowNullValue: true)
-  final IOS? ios;
-
-  final MacOS? macos;
-
-  @JsonKey(required: false, disallowNullValue: true)
-  final Font? font;
-
-  const App({
-    this.android,
-    this.ios,
-    this.macos,
-    this.font,
-  });
-
-  factory App.fromJson(Map<String, dynamic> json) => _$AppFromJson(json);
+  @override
+  String toString() => 'FlutterFontsFileProcessor';
 }

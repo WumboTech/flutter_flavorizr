@@ -9,7 +9,7 @@ part of 'app.dart';
 App _$AppFromJson(Map json) {
   $checkKeys(
     json,
-    disallowNullValues: const ['android', 'ios'],
+    disallowNullValues: const ['android', 'ios', 'font'],
   );
   return App(
     android: json['android'] == null
@@ -21,5 +21,8 @@ App _$AppFromJson(Map json) {
     macos: json['macos'] == null
         ? null
         : MacOS.fromJson(Map<String, dynamic>.from(json['macos'] as Map)),
+    font: json['font'] == null
+        ? null
+        : Font.fromJson(Map<String, dynamic>.from(json['font'] as Map)),
   );
 }

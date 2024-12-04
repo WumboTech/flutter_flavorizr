@@ -43,6 +43,7 @@ import 'package:flutter_flavorizr/src/processors/commons/unzip_file_processor.da
 import 'package:flutter_flavorizr/src/processors/darwin/darwin_schemas_processor.dart';
 import 'package:flutter_flavorizr/src/processors/darwin/podfile_processor.dart';
 import 'package:flutter_flavorizr/src/processors/flutter/flutter_flavors_processor.dart';
+import 'package:flutter_flavorizr/src/processors/flutter/target/flutter_fonts_file_processor.dart';
 import 'package:flutter_flavorizr/src/processors/flutter/target/flutter_targets_file_processor.dart';
 import 'package:flutter_flavorizr/src/processors/google/firebase/firebase_processor.dart';
 import 'package:flutter_flavorizr/src/processors/huawei/agconnect/agconnect_processor.dart';
@@ -83,6 +84,7 @@ class Processor extends AbstractProcessor<void> {
     'flutter:pages',
     'flutter:main',
     'flutter:targets',
+    'flutter:font',
 
     // iOS
     'ios:podfile',
@@ -137,7 +139,9 @@ class Processor extends AbstractProcessor<void> {
       ..removeWhere((instruction) =>
           !_flavorizr.sampleAssets && instruction == 'flutter:pages')
       ..removeWhere((instruction) =>
-          !_flavorizr.sampleAssets && instruction == 'flutter:main');
+          !_flavorizr.sampleAssets && instruction == 'flutter:main')
+      ..removeWhere((instruction) =>
+          _flavorizr.app?.font == null && instruction == 'flutter:font');
 
     for (String instruction in instructions) {
       stdout.writeln('Executing task $instruction');
@@ -228,6 +232,10 @@ class Processor extends AbstractProcessor<void> {
       'flutter:targets': () => FlutterTargetsFileProcessor(
             K.tempFlutterMainTargetPath,
             K.flutterPath,
+            config: flavorizr,
+          ),
+      'flutter:font': () => FlutterFontsFileProcessor(
+            K.flutterFontPath,
             config: flavorizr,
           ),
 
