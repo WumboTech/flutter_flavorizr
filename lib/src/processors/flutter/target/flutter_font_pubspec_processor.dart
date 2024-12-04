@@ -15,11 +15,11 @@ class FlutterFontPubspecProcessor extends StringProcessor {
     if (font != null) {
       for (var ext in K.fontExtensions) {
         if (font.regular?.isNotEmpty == true) {
-          input!.replaceFirst(
+          input = input!.replaceFirst(
               '${K.fontRegular}.$ext', '${K.fontRegular}.${font.regularExt}');
         }
         if (font.bold?.isNotEmpty == true) {
-          input!.replaceFirst(
+          input = input!.replaceFirst(
               '${K.fontBold}.$ext', '${K.fontBold}.${font.boldExt}');
         }
       }
